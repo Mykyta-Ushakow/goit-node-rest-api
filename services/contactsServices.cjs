@@ -54,7 +54,7 @@ async function addContact(name, email, phone) {
 
 		const isPresent = prevData.find((item) => item.name === toAdd.name);
 
-		if (isPresent) return console.log("This name is already taken") || null;
+		if (isPresent) return null;
 
 		const newData = [...prevData, toAdd];
 
@@ -66,12 +66,33 @@ async function addContact(name, email, phone) {
 	}
 }
 
-async function updateContact(contactId) {}
+async function updateContactById(contactId, newData) {
+	try {
+		const prevData = await listContacts();
+
+		const toUpdate = prevData.find((item) => item.id === contactId) || null;
+		if (!toUpdate) return console.log("No such contact") || toUpdate;
+
+		const updatedContact = { ...toUpdate, ...newData };
+
+		const otherContacts = prevData.filter(
+			(item) => item.id !== updatedContact.id
+		);
+
+		const newContacts = [...otherContacts, updatedContact];
+
+		await fs.writeFile(contactsPath, JSON.stringify(newContacts));
+
+		return updatedContact;
+	} catch (error) {
+		console.log(error);
+	}
+}
 
 module.exports = {
 	listContacts,
 	getContactById,
 	removeContact,
 	addContact,
-	updateContact,
+	updateContactById,
 };
