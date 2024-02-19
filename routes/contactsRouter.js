@@ -12,7 +12,7 @@ import {
 import {
 	createContactSchema,
 	updateContactSchema,
-} from "../schemas/contactsSchemas.js";
+} from "../schemas/contactsJoiSchemas.js";
 
 const contactsRouter = express.Router();
 

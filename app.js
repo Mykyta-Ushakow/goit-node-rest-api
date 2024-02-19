@@ -14,7 +14,7 @@ const app = express();
 mongoose
 	.connect(serverConfig.mongoUrl)
 	.then(() => {
-		console.log("Mongo DB connected..");
+		console.log("Database connection successful.");
 	})
 	.catch((err) => {
 		console.log(err);

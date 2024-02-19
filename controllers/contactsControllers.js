@@ -1,11 +1,10 @@
-import { json } from "express";
 import {
 	listContacts,
 	getContactById,
 	removeContact,
 	addContact,
 	updateContactById,
-} from "../services/contactsServices.cjs";
+} from "../services/contactsServices.js";
 
 import { catchAsync } from "../helpers/Wraps.cjs";
 import HttpError from "../helpers/HttpError.js";
