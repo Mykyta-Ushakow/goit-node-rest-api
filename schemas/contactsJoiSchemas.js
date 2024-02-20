@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const requiredMissingMsg =
-	"Make sure you add their name, email and phone number, as well their status as a favorite";
+	"Make sure you add their name, email and phone number.";
 
 export const createContactSchema = Joi.object({
 	name: Joi.string()
@@ -26,12 +26,7 @@ export const createContactSchema = Joi.object({
 		.label("The contact's phone number")
 		.required()
 		.messages({ "any.required": requiredMissingMsg }),
-	favorite: Joi.boolean()
-		.label("The contact's favorite status")
-		.required()
-		.messages({
-			"any.required": requiredMissingMsg,
-		}),
+	favorite: Joi.boolean().label("The contact's favorite status"),
 });
 
 export const updateContactSchema = Joi.object({
@@ -48,3 +43,23 @@ export const updateContactSchema = Joi.object({
 })
 	.or("name", "email", "phone", "favorite")
 	.messages({ "object.missing": "Body must have at least one field" });
+
+export const updateFavoriteSchema = Joi.object({
+	favorite: Joi.boolean()
+		.label("The contact's favorite status")
+		.required()
+		.messages({
+			"any.required":
+				"Please add the contacts favorite status as a boolean value",
+			"boolean.base": "The contact's favorite status must be a boolean value",
+		}),
+})
+	.keys({
+		favorite: Joi.required(),
+	})
+	.unknown(false)
+	.messages({
+		"object.missing":
+			"Body must have the updated favorite status as a JSON with the 'favorite' property",
+		"object.unknown": "Body cannot have any properties other than 'favorite'",
+	});

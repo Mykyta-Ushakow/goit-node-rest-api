@@ -1,7 +1,5 @@
 node_modules/
 envs/
-.env
-
 .idea
 .vscode
 .DS_Store
