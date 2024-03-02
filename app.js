@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import "./configs/dotenvConfig.js";
 import contactsRouter from "./routes/contactsRouter.js";
 import serverConfig from "./configs/serverConfig.js";
+import usersRouter from "./routes/usersRouter.js";
 
 const app = express();
 
@@ -27,15 +28,16 @@ mongoose
 		process.exit(1);
 	});
 
-// MIDDLEWARES ===========================
+// MIDDLEWARES ======================
 
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
-// ROUTER ===========================
+// ROUTERS ==========================
 
 app.use("/api/contacts", contactsRouter);
+app.use("/api/users", usersRouter);
 
 // ERRORS ===========================
 

@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model } from "mongoose";
 import oneContactSchema from "../schemas/contactsDBSchemas.js";
 
 const Contact = model("contact", oneContactSchema);

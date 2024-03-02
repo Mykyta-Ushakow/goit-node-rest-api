@@ -1,5 +1,4 @@
 import Contact from "../models/contactModel.js";
-import { Types } from "mongoose";
 
 const listContacts = () => Contact.find();
 
