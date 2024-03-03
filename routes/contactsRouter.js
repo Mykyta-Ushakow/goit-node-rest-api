@@ -1,5 +1,4 @@
 import express from "express";
-import validateBody from "../helpers/validateBody.js";
 
 import {
 	getAllContacts,
@@ -15,6 +14,8 @@ import {
 	updateContactSchema,
 	updateFavoriteSchema,
 } from "../schemas/contactsJoiSchemas.js";
+
+import validateBody from "../middlewares/validateBody.js";
 
 const contactsRouter = express.Router();
 
