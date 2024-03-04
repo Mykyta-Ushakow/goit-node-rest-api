@@ -25,17 +25,29 @@ export const registerUserSchema = Joi.object({
 			"string.alphanum":
 				"Please only use numbers and letters for the password.",
 		}),
+	subscription: Joi.string()
+		.alphanum()
+		.label("Your subscription plan")
+		.valid("starter", "pro", "business")
+		.default("starter")
+		.messages({
+			"any.only":
+				"We only have 'starter', 'pro' and 'business' as the subscription options",
+			"string.alphanum":
+				"Please only use numbers and letters for the subscription.",
+		}),
 })
 	.unknown(false)
 	.keys({
 		email: Joi.required(),
 		password: Joi.required(),
+		subscription: Joi.optional(),
 	})
 	.messages({
 		"object.missing":
-			"Body must have your email and your password as properties of a JSON.",
+			"Body must have the subscription plan, your email and your password as properties of a JSON.",
 		"object.unknown":
-			"Body cannot have any properties other than email and password",
+			"Body cannot have any properties other than subscription, email and password",
 	});
 
 // export const updateContactSchema = Joi.object({

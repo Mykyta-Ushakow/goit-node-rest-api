@@ -1,6 +1,6 @@
 import User from "./../models/userModel.js";
 
-const createNewUser = () => {};
+const createNewUser = (userData) => User.create(userData);
 const logInUser = () => {};
 const logOutUser = () => {};
 const getUserData = () => {};
