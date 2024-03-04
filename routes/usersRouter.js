@@ -9,7 +9,7 @@ import {
 	registerUser,
 	getUserData,
 	updateSubscription,
-} from "../services/userServices.js";
+} from "../controllers/usersControllers.js";
 
 const usersRouter = express.Router();
 

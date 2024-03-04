@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const requiredMissingMsg = "Make sure you add yor email and set your password.";
+const requiredMissingMsg = "Make sure to add your email and password.";
 
 export const registerUserSchema = Joi.object({
 	email: Joi.string()
