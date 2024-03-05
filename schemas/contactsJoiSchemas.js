@@ -21,6 +21,7 @@ export const createContactSchema = Joi.object({
 		.required()
 		.messages({
 			"any.required": requiredMissingMsg,
+			"string.email": "Please provide a valid email address",
 		}),
 	phone: Joi.string()
 		.label("The contact's phone number")

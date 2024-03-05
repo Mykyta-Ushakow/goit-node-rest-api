@@ -13,6 +13,7 @@ export const registerUserSchema = Joi.object({
 		.required()
 		.messages({
 			"any.required": requiredMissingMsg,
+			"string.email": "Please provide a valid email address",
 		}),
 	password: Joi.string()
 		.alphanum()

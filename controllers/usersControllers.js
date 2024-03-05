@@ -22,9 +22,11 @@ const registerUser = catchAsync(async (req, res) => {
 		password: finalPassword,
 		token: verificationToken,
 	});
-	console.log(newUser);
 
-	res.status(200).json(newUser);
+	res.status(201).json({
+		user: { email: newUser.email, subscription: newUser.subscription },
+		token: newUser.token,
+	});
 });
 
 const logInUser = () => {};
