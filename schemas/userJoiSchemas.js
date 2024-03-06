@@ -18,7 +18,7 @@ export const registerUserSchema = Joi.object({
 	password: Joi.string()
 		.alphanum()
 		.label("Your password")
-		.min(3)
+		.min(6)
 		.max(30)
 		.required()
 		.messages({
@@ -39,32 +39,45 @@ export const registerUserSchema = Joi.object({
 		}),
 })
 	.unknown(false)
-	.keys({
-		email: Joi.required(),
-		password: Joi.required(),
-		subscription: Joi.optional(),
-	})
 	.messages({
 		"object.missing":
-			"Body must have the subscription plan, your email and your password as properties of a JSON.",
+			"Body must have your email and your password as properties of a JSON.",
 		"object.unknown":
 			"Body cannot have any properties other than subscription, email and password",
 	});
 
-// export const updateContactSchema = Joi.object({
-// 	name: Joi.string().min(3).max(30).trim().label("The contact's name"),
-// 	email: Joi.string()
-// 		.email({
-// 			minDomainSegments: 2,
-// 			tlds: { allow: ["com", "net"] },
-// 		})
-// 		.trim()
-// 		.label("The contact's email"),
-// 	phone: Joi.string().label("The contact's phone number"),
-// 	favorite: Joi.boolean().label("The contact's favorite status"),
-// })
-// 	.or("name", "email", "phone", "favorite")
-// 	.messages({ "object.missing": "Body must have at least one field" });
+export const logInSchema = Joi.object({
+	email: Joi.string()
+		.email({
+			minDomainSegments: 2,
+			tlds: { allow: ["com", "net"] },
+		})
+		.trim()
+		.label("Your email")
+		.required()
+		.messages({
+			"any.required": requiredMissingMsg,
+			"string.email": "Please provide a valid email address",
+		}),
+	password: Joi.string()
+		.alphanum()
+		.label("Your password")
+		.min(6)
+		.max(30)
+		.required()
+		.messages({
+			"any.required": requiredMissingMsg,
+			"string.alphanum":
+				"Please only use numbers and letters for the password.",
+		}),
+})
+	.unknown(false)
+	.messages({
+		"object.missing":
+			"Body must have your email and your password as properties of a JSON.",
+		"object.unknown":
+			"Body cannot have any properties other than email and password",
+	});
 
 // export const updateFavoriteSchema = Joi.object({
 // 	favorite: Joi.boolean()

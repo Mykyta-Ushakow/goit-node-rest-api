@@ -8,17 +8,18 @@ import {
 	updateSubscription,
 } from "../controllers/usersControllers.js";
 
-import { registerUserSchema } from "../schemas/userJoiSchemas.js";
+import { logInSchema, registerUserSchema } from "../schemas/userJoiSchemas.js";
 
 import validateBody from "./../middlewares/validateBody.js";
+import { authenticateJWT } from "../middlewares/authenticateJWT.js";
 
 const usersRouter = express.Router();
 
 usersRouter.post("/register", validateBody(registerUserSchema), registerUser);
 
-usersRouter.post("/login", logInUser);
+usersRouter.post("/login", validateBody(logInSchema), logInUser);
 
-usersRouter.post("/logout", logOutUser);
+usersRouter.post("/logout", authenticateJWT, logOutUser);
 
 usersRouter.get("/current", getUserData);
 

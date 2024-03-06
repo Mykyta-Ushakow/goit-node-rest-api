@@ -1,14 +1,15 @@
-import User from "./../models/userModel.js";
+import User from "../models/userModel.js";
 
 const createNewUser = (userData) => User.create(userData);
-const logInUser = () => {};
+const logUserToken = (email, token) =>
+	User.findOneAndUpdate({ email }, { token }, { returnDocument: "after" });
 const logOutUser = () => {};
 const getUserData = () => {};
 const updateSubscription = () => {};
 
 export {
 	createNewUser,
-	logInUser,
+	logUserToken,
 	logOutUser,
 	getUserData,
 	updateSubscription,

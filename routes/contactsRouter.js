@@ -16,21 +16,33 @@ import {
 } from "../schemas/contactsJoiSchemas.js";
 
 import validateBody from "../middlewares/validateBody.js";
+import { authenticateJWT } from "../middlewares/authenticateJWT.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", authenticateJWT, getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", authenticateJWT, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", authenticateJWT, deleteContact);
 
-contactsRouter.post("/", validateBody(createContactSchema), createContact);
+contactsRouter.post(
+	"/",
+	authenticateJWT,
+	validateBody(createContactSchema),
+	createContact
+);
 
-contactsRouter.put("/:id", validateBody(updateContactSchema), updateContact);
+contactsRouter.put(
+	"/:id",
+	authenticateJWT,
+	validateBody(updateContactSchema),
+	updateContact
+);
 
 contactsRouter.patch(
 	"/:id/favorite",
+	authenticateJWT,
 	validateBody(updateFavoriteSchema),
 	updateFavorite
 );

@@ -1,12 +1,10 @@
 import { catchAsync } from "../helpers/Wraps.cjs";
 import { signToken } from "../helpers/JWTLogic.js";
-import { hashPassword } from "../helpers/Hashing.js";
+import { comparePasswords, hashPassword } from "../helpers/Hashing.js";
 import HttpError from "../helpers/HttpError.js";
 
-import { createNewUser } from "../services/userServices.js";
+import { createNewUser, logUserToken } from "../services/usersServices.js";
 import User from "../models/userModel.js";
-
-import { v4 } from "uuid";
 
 const registerUser = catchAsync(async (req, res) => {
 	const { email, password } = req.body;
@@ -15,23 +13,45 @@ const registerUser = catchAsync(async (req, res) => {
 	if (isPresent) throw new HttpError(409, "Email already registered");
 
 	const finalPassword = await hashPassword(password);
-	const verificationToken = signToken(v4());
 
 	const newUser = await createNewUser({
 		...req.body,
 		password: finalPassword,
-		token: verificationToken,
 	});
+
+	const verificationToken = signToken(newUser._id);
+
+	newUser.token = verificationToken;
+	await newUser.save();
 
 	res.status(201).json({
 		user: { email: newUser.email, subscription: newUser.subscription },
-		token: newUser.token,
+		token: verificationToken,
 	});
 });
 
-const logInUser = () => {};
+const logInUser = catchAsync(async (req, res) => {
+	const { email, password } = req.body;
 
-const logOutUser = () => {};
+	console.log(req.user);
+
+	const thisUser = await User.findOne({ email });
+	if (!thisUser) throw new HttpError(401, "Email or password is wrong");
+
+	const isAuthentic = await comparePasswords(password, thisUser.password);
+	if (!isAuthentic) throw new HttpError(401, "Email or password is wrong");
+
+	const newToken = await signToken(thisUser.id);
+
+	const updatedUser = await logUserToken(thisUser.email, newToken);
+
+	res.status(200).json({
+		user: { email: updatedUser.email, subscription: updatedUser.subscription },
+		token: updatedUser.token,
+	});
+});
+
+const logOutUser = catchAsync(async (req, res) => {});
 
 const getUserData = () => {};
 

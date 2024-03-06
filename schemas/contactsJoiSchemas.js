@@ -55,9 +55,6 @@ export const updateFavoriteSchema = Joi.object({
 			"boolean.base": "The contact's favorite status must be a boolean value",
 		}),
 })
-	.keys({
-		favorite: Joi.required(),
-	})
 	.unknown(false)
 	.messages({
 		"object.missing":
