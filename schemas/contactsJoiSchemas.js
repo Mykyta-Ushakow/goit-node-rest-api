@@ -27,6 +27,10 @@ export const createContactSchema = Joi.object({
 		.label("The contact's phone number")
 		.required()
 		.messages({ "any.required": requiredMissingMsg }),
+	owner: Joi.string()
+		.hex()
+		.length(24)
+		.label("The contact's owner (MongoDB ObjectID)"),
 	favorite: Joi.boolean().label("The contact's favorite status"),
 });
 

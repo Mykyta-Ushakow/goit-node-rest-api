@@ -1,18 +1,28 @@
 import Contact from "../models/contactModel.js";
 
-const listContacts = () => Contact.find();
+const safeFields = "name email phone favorite";
 
-const getContactById = (contactId) => Contact.findById(contactId);
+const listContacts = (owner) => Contact.find({ owner }, safeFields);
 
-const removeContact = (contactId) => Contact.findByIdAndDelete(contactId);
+const getContactById = (conditions = {}) =>
+	Contact.findOne(conditions, safeFields);
+
+const removeContact = (conditions = {}) =>
+	Contact.findOneAndDelete(conditions, { projection: safeFields });
 
 const addContact = (contactData) => Contact.create(contactData);
 
-const updateContactById = (contactId, newData) =>
-	Contact.findByIdAndUpdate(contactId, newData, { returnDocument: "after" });
+const updateContactById = (conditions, newData) =>
+	Contact.findOneAndUpdate(conditions, newData, {
+		returnDocument: "after",
+		projection: safeFields,
+	});
 
-const updateStatusContact = (contactId, body) =>
-	Contact.findByIdAndUpdate(contactId, body, { returnDocument: "after" });
+const updateStatusContact = (conditions, newData) =>
+	Contact.findOneAndUpdate(conditions, newData, {
+		returnDocument: "after",
+		projection: safeFields,
+	});
 
 export {
 	listContacts,
