@@ -38,8 +38,6 @@ const registerUser = catchAsync(async (req, res) => {
 const logInUser = catchAsync(async (req, res) => {
 	const { email, password } = req.body;
 
-	console.log(req.user);
-
 	const thisUser = await User.findOne({ email });
 	if (!thisUser) throw new HttpError(401, "Email or password is wrong");
 
