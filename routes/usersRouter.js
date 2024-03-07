@@ -4,11 +4,15 @@ import {
 	logInUser,
 	logOutUser,
 	registerUser,
-	getUserData,
-	updateSubscription,
+	getCurrentUser,
+	updateSubscriptionPlan,
 } from "../controllers/usersControllers.js";
 
-import { logInSchema, registerUserSchema } from "../schemas/userJoiSchemas.js";
+import {
+	logInSchema,
+	registerUserSchema,
+	updateSubscriptionSchema,
+} from "../schemas/userJoiSchemas.js";
 
 import validateBody from "./../middlewares/validateBody.js";
 import { authenticateJWT } from "../middlewares/authenticateJWT.js";
@@ -21,8 +25,13 @@ usersRouter.post("/login", validateBody(logInSchema), logInUser);
 
 usersRouter.post("/logout", authenticateJWT, logOutUser);
 
-usersRouter.get("/current", getUserData);
+usersRouter.get("/current", authenticateJWT, getCurrentUser);
 
-usersRouter.patch("/", updateSubscription);
+usersRouter.patch(
+	"/",
+	authenticateJWT,
+	validateBody(updateSubscriptionSchema),
+	updateSubscriptionPlan
+);
 
 export default usersRouter;

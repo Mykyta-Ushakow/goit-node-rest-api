@@ -1,9 +1,14 @@
-import { catchAsync } from "../helpers/Wraps.cjs";
+import { catchAsync } from "../helpers/Wraps.js";
 import { signToken } from "../helpers/JWTLogic.js";
 import { comparePasswords, hashPassword } from "../helpers/Hashing.js";
 import HttpError from "../helpers/HttpError.js";
 
-import { createNewUser, logUserToken } from "../services/usersServices.js";
+import {
+	createNewUser,
+	logUserToken,
+	updateSubscription,
+	wipeUserToken,
+} from "../services/usersServices.js";
 import User from "../models/userModel.js";
 
 const registerUser = catchAsync(async (req, res) => {
@@ -51,10 +56,38 @@ const logInUser = catchAsync(async (req, res) => {
 	});
 });
 
-const logOutUser = catchAsync(async (req, res) => {});
+const logOutUser = catchAsync(async (req, res) => {
+	const { _id } = req.user;
 
-const getUserData = () => {};
+	await wipeUserToken(_id);
 
-const updateSubscription = () => {};
+	res.status(204).json();
+});
 
-export { registerUser, logInUser, logOutUser, getUserData, updateSubscription };
+const getCurrentUser = catchAsync(async (req, res) => {
+	const { email, subscription } = req.user;
+	res.status(200).json({ email, subscription });
+});
+
+const updateSubscriptionPlan = catchAsync(async (req, res) => {
+	const { _id } = req.user;
+	const { subscription } = req.body;
+
+	if (subscription === req.user.subscription)
+		throw new HttpError(409, "Already using this plan");
+
+	const newUser = await updateSubscription(_id, subscription);
+
+	res.status(200).json({
+		msg: "Sucess!",
+		user: { subscription: newUser.subscription, email: newUser.email },
+	});
+});
+
+export {
+	registerUser,
+	logInUser,
+	logOutUser,
+	getCurrentUser,
+	updateSubscriptionPlan,
+};

@@ -1,12 +1,11 @@
-// import { Strategy, ExtractJwt, passport } from "passport-jwt";
-import { catchAsync } from "../helpers/Wraps.cjs";
+import { catchAuth } from "../helpers/Wraps.js";
 import HttpError from "../helpers/HttpError.js";
 
 import serverConfig from "../configs/serverConfig.js";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
-const authenticateJWT = catchAsync(async (req, res, next) => {
+const authenticateJWT = catchAuth(async (req, res, next) => {
 	const { authorization = "" } = req.headers;
 	if (!authorization) throw new HttpError(401, "Not authorized");
 

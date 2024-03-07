@@ -7,7 +7,7 @@ import {
 	updateStatusContact,
 } from "../services/contactsServices.js";
 
-import { catchAsync } from "../helpers/Wraps.cjs";
+import { catchAsync } from "../helpers/Wraps.js";
 import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = catchAsync(async (_, res) => {

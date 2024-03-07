@@ -79,22 +79,23 @@ export const logInSchema = Joi.object({
 			"Body cannot have any properties other than email and password",
 	});
 
-// export const updateFavoriteSchema = Joi.object({
-// 	favorite: Joi.boolean()
-// 		.label("The contact's favorite status")
-// 		.required()
-// 		.messages({
-// 			"any.required":
-// 				"Please add the contacts favorite status as a boolean value",
-// 			"boolean.base": "The contact's favorite status must be a boolean value",
-// 		}),
-// })
-// 	.keys({
-// 		favorite: Joi.required(),
-// 	})
-// 	.unknown(false)
-// 	.messages({
-// 		"object.missing":
-// 			"Body must have the updated favorite status as a JSON with the 'favorite' property",
-// 		"object.unknown": "Body cannot have any properties other than 'favorite'",
-// 	});
+export const updateSubscriptionSchema = Joi.object({
+	subscription: Joi.string()
+		.alphanum()
+		.label("Your subscription plan")
+		.valid("starter", "pro", "business")
+		.required()
+		.messages({
+			"any.only":
+				"We only have 'starter', 'pro' and 'business' as the subscription options",
+			"string.alphanum":
+				"Please only use letters for the subscription plan name.",
+		}),
+})
+	.unknown(false)
+	.messages({
+		"object.missing":
+			"Body must have the updated subscription plan as a JSON with the 'subscription' property",
+		"object.unknown":
+			"Body cannot have any properties other than 'subscription'",
+	});
