@@ -3,3 +3,8 @@ envs/
 .idea
 .vscode
 .DS_Store
+
+temp/*
+!temp/.gitkeep
+public/**/*
+!public/**/.gitkeep
