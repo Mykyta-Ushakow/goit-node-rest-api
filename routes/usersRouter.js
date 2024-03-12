@@ -34,4 +34,11 @@ usersRouter.patch(
 	updateSubscriptionPlan
 );
 
+usersRouter.get(
+	"/avatar",
+	authenticateJWT,
+	validateBody(updateSubscriptionSchema),
+	updateSubscriptionPlan
+);
+
 export default usersRouter;

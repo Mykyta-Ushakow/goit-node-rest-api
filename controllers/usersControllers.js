@@ -82,6 +82,11 @@ const updateSubscriptionPlan = catchAsync(async (req, res) => {
 	});
 });
 
+const getUserAvatar = catchAsync(async (req, res) => {
+	const { email, subscription } = req.user;
+	res.status(200).json({ email, subscription });
+});
+
 export {
 	registerUser,
 	logInUser,
