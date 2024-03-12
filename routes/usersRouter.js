@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 
 import {
 	logInUser,
@@ -6,6 +7,7 @@ import {
 	registerUser,
 	getCurrentUser,
 	updateSubscriptionPlan,
+	getUserAvatar,
 } from "../controllers/usersControllers.js";
 
 import {
@@ -35,10 +37,9 @@ usersRouter.patch(
 );
 
 usersRouter.get(
-	"/avatar",
-	authenticateJWT,
-	validateBody(updateSubscriptionSchema),
-	updateSubscriptionPlan
+	"/avatar/:avatarUrl",
+	// express.static(path.join(process.cwd(), "public", "avatars"))
+	getUserAvatar
 );
 
 export default usersRouter;

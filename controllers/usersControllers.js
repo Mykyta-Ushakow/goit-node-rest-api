@@ -83,8 +83,9 @@ const updateSubscriptionPlan = catchAsync(async (req, res) => {
 });
 
 const getUserAvatar = catchAsync(async (req, res) => {
-	const { email, subscription } = req.user;
-	res.status(200).json({ email, subscription });
+	console.log(req.params.avatarUrl);
+	res.send("done");
+	// res.sendFile(path.join(process.cwd(), "public/avatars", req.body.avatar));
 });
 
 export {
@@ -93,4 +94,5 @@ export {
 	logOutUser,
 	getCurrentUser,
 	updateSubscriptionPlan,
+	getUserAvatar,
 };
