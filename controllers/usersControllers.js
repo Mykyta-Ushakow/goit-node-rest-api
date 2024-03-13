@@ -9,7 +9,10 @@ import {
 	updateSubscription,
 	wipeUserToken,
 } from "../services/usersServices.js";
+
 import User from "../models/userModel.js";
+
+import gravatar from "gravatar";
 
 const registerUser = catchAsync(async (req, res) => {
 	const { email, password } = req.body;
@@ -19,8 +22,11 @@ const registerUser = catchAsync(async (req, res) => {
 
 	const finalPassword = await hashPassword(password);
 
+	const avatarURL = gravatar.url(email, { s: 200 }, true);
+
 	const newUser = await createNewUser({
 		...req.body,
+		avatarURL,
 		password: finalPassword,
 	});
 
@@ -82,17 +88,10 @@ const updateSubscriptionPlan = catchAsync(async (req, res) => {
 	});
 });
 
-const getUserAvatar = catchAsync(async (req, res) => {
-	console.log(req.params.avatarUrl);
-	res.send("done");
-	// res.sendFile(path.join(process.cwd(), "public/avatars", req.body.avatar));
-});
-
 export {
 	registerUser,
 	logInUser,
 	logOutUser,
 	getCurrentUser,
 	updateSubscriptionPlan,
-	getUserAvatar,
 };

@@ -7,7 +7,6 @@ import {
 	registerUser,
 	getCurrentUser,
 	updateSubscriptionPlan,
-	getUserAvatar,
 } from "../controllers/usersControllers.js";
 
 import {
@@ -34,12 +33,6 @@ usersRouter.patch(
 	authenticateJWT,
 	validateBody(updateSubscriptionSchema),
 	updateSubscriptionPlan
-);
-
-usersRouter.get(
-	"/avatar/:avatarUrl",
-	// express.static(path.join(process.cwd(), "public", "avatars"))
-	getUserAvatar
 );
 
 export default usersRouter;
