@@ -1,3 +1,6 @@
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+
 import { catchAsync } from "../helpers/Wraps.js";
 import { signToken } from "../helpers/JWTLogic.js";
 import { comparePasswords, hashPassword } from "../helpers/Hashing.js";
@@ -6,6 +9,7 @@ import HttpError from "../helpers/HttpError.js";
 import {
 	createNewUser,
 	logUserToken,
+	updateAvatar,
 	updateSubscription,
 	wipeUserToken,
 } from "../services/usersServices.js";
@@ -13,6 +17,7 @@ import {
 import User from "../models/userModel.js";
 
 import gravatar from "gravatar";
+import Jimp from "jimp";
 
 const registerUser = catchAsync(async (req, res) => {
 	const { email, password } = req.body;
@@ -88,10 +93,36 @@ const updateSubscriptionPlan = catchAsync(async (req, res) => {
 	});
 });
 
+const updateUserAvatar = catchAsync(async (req, res) => {
+	if (!req.file) throw new HttpError(400, "No image provided");
+
+	const { _id } = req.user;
+
+	const newLocation = path.join(
+		process.cwd(),
+		"public",
+		"avatars",
+		req.file.filename
+	);
+
+	const avatarURL = `/avatars/${req.file.filename}`;
+
+	fs.rename(req.file.path, newLocation, (err) => {
+		if (err) throw err;
+	});
+	const newAvatar = await Jimp.read(newLocation);
+	newAvatar.cover(250, 250).write(newLocation);
+
+	await updateAvatar(_id, avatarURL);
+
+	res.status(200).json({ avatarURL });
+});
+
 export {
 	registerUser,
 	logInUser,
 	logOutUser,
 	getCurrentUser,
 	updateSubscriptionPlan,
+	updateUserAvatar,
 };

@@ -10,4 +10,13 @@ const wipeUserToken = (_id) => User.findByIdAndUpdate(_id, { token: "" });
 const updateSubscription = (_id, subscription) =>
 	User.findByIdAndUpdate(_id, { subscription }, { returnDocument: "after" });
 
-export { createNewUser, logUserToken, wipeUserToken, updateSubscription };
+const updateAvatar = (_id, avatarURL) =>
+	User.findByIdAndUpdate(_id, { avatarURL }, { returnDocument: "after" });
+
+export {
+	createNewUser,
+	logUserToken,
+	wipeUserToken,
+	updateSubscription,
+	updateAvatar,
+};

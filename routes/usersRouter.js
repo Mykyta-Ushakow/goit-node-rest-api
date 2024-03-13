@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 
 import {
 	logInUser,
@@ -7,6 +6,7 @@ import {
 	registerUser,
 	getCurrentUser,
 	updateSubscriptionPlan,
+	updateUserAvatar,
 } from "../controllers/usersControllers.js";
 
 import {
@@ -17,6 +17,7 @@ import {
 
 import validateBody from "./../middlewares/validateBody.js";
 import { authenticateJWT } from "../middlewares/authenticateJWT.js";
+import uploadIMG from "../middlewares/uploadIMG.js";
 
 const usersRouter = express.Router();
 
@@ -33,6 +34,13 @@ usersRouter.patch(
 	authenticateJWT,
 	validateBody(updateSubscriptionSchema),
 	updateSubscriptionPlan
+);
+
+usersRouter.patch(
+	"/avatars",
+	authenticateJWT,
+	uploadIMG.single("avatar"),
+	updateUserAvatar
 );
 
 export default usersRouter;
