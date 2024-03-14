@@ -6,5 +6,4 @@ envs/
 
 temp/*
 !temp/.gitkeep
-public/**/*
 !public/**/.gitkeep
