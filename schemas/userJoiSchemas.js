@@ -99,3 +99,23 @@ export const updateSubscriptionSchema = Joi.object({
 		"object.unknown":
 			"Body cannot have any properties other than 'subscription'",
 	});
+
+export const resendEmailSchema = Joi.object({
+	email: Joi.string()
+		.email({
+			minDomainSegments: 2,
+			tlds: { allow: ["com", "net"] },
+		})
+		.trim()
+		.label("Your email")
+		.required()
+		.messages({
+			"any.required": "Missing required field email",
+			"string.email": "Please provide a valid email address",
+		}),
+})
+	.unknown(false)
+	.messages({
+		"object.missing": "Missing required field email",
+		"object.unknown": "Body cannot have any properties other than email",
+	});

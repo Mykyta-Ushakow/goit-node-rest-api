@@ -18,6 +18,9 @@ const authenticateJWT = catchAuth(async (req, res, next) => {
 	if (!user || !user.token || user.token !== token)
 		throw new HttpError(401, "Not authorized");
 
+	if (user.verify === false)
+		throw new HttpError(401, "Your account is not verified");
+
 	req.user = user;
 	next();
 });

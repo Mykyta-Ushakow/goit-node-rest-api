@@ -7,11 +7,14 @@ import {
 	getCurrentUser,
 	updateSubscriptionPlan,
 	updateUserAvatar,
+	verifyEmail,
+	resendVerifyEmail,
 } from "../controllers/usersControllers.js";
 
 import {
 	logInSchema,
 	registerUserSchema,
+	resendEmailSchema,
 	updateSubscriptionSchema,
 } from "../schemas/userJoiSchemas.js";
 
@@ -42,5 +45,9 @@ usersRouter.patch(
 	uploadIMG.single("avatar"),
 	updateUserAvatar
 );
+
+usersRouter.get("/verify/:verificationToken", verifyEmail);
+
+usersRouter.post("/verify", validateBody(resendEmailSchema), resendVerifyEmail);
 
 export default usersRouter;

@@ -11,13 +11,16 @@ import {
 	logUserToken,
 	updateAvatar,
 	updateSubscription,
+	updateVerification,
 	wipeUserToken,
 } from "../services/usersServices.js";
+import { sendVerificationEmail } from "../services/emailServices.js";
 
 import User from "../models/userModel.js";
 
 import gravatar from "gravatar";
 import Jimp from "jimp";
+import { v4 } from "uuid";
 
 const registerUser = catchAsync(async (req, res) => {
 	const { email, password } = req.body;
@@ -29,20 +32,30 @@ const registerUser = catchAsync(async (req, res) => {
 
 	const avatarURL = gravatar.url(email, { s: 200 }, true);
 
+	const emailVerification = v4();
+
 	const newUser = await createNewUser({
 		...req.body,
+		verificationToken: emailVerification,
 		avatarURL,
 		password: finalPassword,
 	});
 
-	const verificationToken = signToken(newUser._id);
+	const JWTToken = signToken(newUser._id);
 
-	newUser.token = verificationToken;
+	newUser.token = JWTToken;
 	await newUser.save();
+
+	await sendVerificationEmail(
+		email,
+		`http://localhost:${
+			process.env.PORT ?? 4000
+		}/api/users/verify/${emailVerification}`
+	);
 
 	res.status(201).json({
 		user: { email: newUser.email, subscription: newUser.subscription },
-		token: verificationToken,
+		token: JWTToken,
 	});
 });
 
@@ -51,6 +64,7 @@ const logInUser = catchAsync(async (req, res) => {
 
 	const thisUser = await User.findOne({ email });
 	if (!thisUser) throw new HttpError(401, "Email or password is wrong");
+	if (thisUser.verify === false) throw new HttpError(401, "Email not verified");
 
 	const isAuthentic = await comparePasswords(password, thisUser.password);
 	if (!isAuthentic) throw new HttpError(401, "Email or password is wrong");
@@ -118,6 +132,38 @@ const updateUserAvatar = catchAsync(async (req, res) => {
 	res.status(200).json({ avatarURL });
 });
 
+const verifyEmail = catchAsync(async (req, res) => {
+	const { verificationToken } = req.params;
+
+	const user = await User.findOne({ verificationToken });
+	if (!user) throw new HttpError(404, "User not found");
+
+	await updateVerification(user._id, {
+		verificationToken: null,
+		verify: true,
+	});
+
+	res.status(200).json({ message: "Verification successful" });
+});
+
+const resendVerifyEmail = catchAsync(async (req, res) => {
+	const { email } = req.body;
+
+	const user = await User.findOne({ email });
+	if (!user) throw new HttpError(404, "User not found");
+	if (user.verify === true || user.verificationToken === null)
+		throw new HttpError(400, "Verification has already been passed");
+
+	await sendVerificationEmail(
+		email,
+		`http://localhost:${process.env.PORT ?? 4000}/api/users/verify/${
+			user.verificationToken
+		}`
+	);
+
+	res.status(200).json({ message: "Verification email sent" });
+});
+
 export {
 	registerUser,
 	logInUser,
@@ -125,4 +171,6 @@ export {
 	getCurrentUser,
 	updateSubscriptionPlan,
 	updateUserAvatar,
+	verifyEmail,
+	resendVerifyEmail,
 };

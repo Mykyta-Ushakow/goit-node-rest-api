@@ -13,10 +13,14 @@ const updateSubscription = (_id, subscription) =>
 const updateAvatar = (_id, avatarURL) =>
 	User.findByIdAndUpdate(_id, { avatarURL }, { returnDocument: "after" });
 
+const updateVerification = (_id, conditions) =>
+	User.findByIdAndUpdate(_id, conditions, { returnDocument: "after" });
+
 export {
 	createNewUser,
 	logUserToken,
 	wipeUserToken,
 	updateSubscription,
 	updateAvatar,
+	updateVerification,
 };
