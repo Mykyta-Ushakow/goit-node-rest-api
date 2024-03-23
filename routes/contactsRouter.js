@@ -17,14 +17,15 @@ import {
 
 import validateBody from "../middlewares/validateBody.js";
 import { authenticateJWT } from "../middlewares/authenticateJWT.js";
+import isValidId from "../middlewares/validateID.js";
 
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", authenticateJWT, getAllContacts);
 
-contactsRouter.get("/:id", authenticateJWT, getOneContact);
+contactsRouter.get("/:id", isValidId, authenticateJWT, getOneContact);
 
-contactsRouter.delete("/:id", authenticateJWT, deleteContact);
+contactsRouter.delete("/:id", isValidId, authenticateJWT, deleteContact);
 
 contactsRouter.post(
 	"/",
@@ -35,6 +36,7 @@ contactsRouter.post(
 
 contactsRouter.put(
 	"/:id",
+	isValidId,
 	authenticateJWT,
 	validateBody(updateContactSchema),
 	updateContact
@@ -42,6 +44,7 @@ contactsRouter.put(
 
 contactsRouter.patch(
 	"/:id/favorite",
+	isValidId,
 	authenticateJWT,
 	validateBody(updateFavoriteSchema),
 	updateFavorite
